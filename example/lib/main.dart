@@ -1,9 +1,8 @@
-import 'dart:developer';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'dart:async';
-
 import 'package:flutter/services.dart';
+
 import 'package:dxcaptcha_flutter/dxcaptcha_flutter.dart';
 
 void main() {
@@ -18,31 +17,30 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
-  @override
-  void initState() {
-    super.initState();
-    initPlatformState();
-  }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    try {
-      await DxCaptchaFlutter.show({});
-    } on PlatformException catch (e) {
-      log(e.toString());
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Plugin example app'),
+          title: const Text('DxCaptcha Plugin'),
         ),
-        body: const Center(
-          child: Text('Running on'),
+        body: Center(
+          child: TextButton(
+            onPressed: () async {
+              DxCaptchaFlutter.setMethodCallHandler((MethodCall call) async {
+                if (call.method == 'success') {
+                  final res = jsonDecode(call.arguments as String)
+                      as Map<String, dynamic>;
+                  final dxToken = res['token'] as String?;
+                } else if (call.method == 'error') {}
+              });
+              await DxCaptchaFlutter.show({
+                'appId': '26ba29b6a3744dbebee8e46fbe3f311a',
+                'language': 'en',
+              });
+            },
+            child: const Text('Show Captcha'),
+          ),
         ),
       ),
     );
