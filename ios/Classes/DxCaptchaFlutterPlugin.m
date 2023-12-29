@@ -5,6 +5,9 @@
 //
 
 #import "DxCaptchaFlutterPlugin.h"
+#import <DXRiskStaticWithIDFA/DXRiskManager.h>
+#import <DingxiangCaptchaSDKStatic/DXCaptchaView.h>
+#import <DingxiangCaptchaSDKStatic/DXCaptchaDelegate.h>
 
 @interface DxCaptchaFlutterPlugin () <DXCaptchaDelegate, UIGestureRecognizerDelegate>
 

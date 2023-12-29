@@ -19,7 +19,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/integration_test/ios"
 
 SPEC CHECKSUMS:
-  dxcaptcha_flutter: 8715671402362d916522cc2079409121589ec19e
+  dxcaptcha_flutter: fc62f2b79a04a114795940cb4a2aea70c99d5166
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   integration_test: 13825b8a9334a850581300559b8839134b124670
 

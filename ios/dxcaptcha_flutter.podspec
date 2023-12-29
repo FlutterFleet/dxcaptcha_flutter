@@ -25,10 +25,6 @@ Enables Dx Captcha in Flutter apps.
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
 
-  # 这个会添加到最终target 的xcconfig中，不建议使用，不应该污染用户项目的构建设置，因为这可能导致冲突。
-  # 解决OC与Swift混编的问题
-  s.user_target_xcconfig = { 'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES' }
-
   # https://github.com/CocoaPods/CocoaPods/issues/3232
   s.ios.libraries = 'c++', 'c++abi', 'resolv.9', 'z'
   s.ios.frameworks = 'CoreLocation', 'CoreTelephony', 'SystemConfiguration'
