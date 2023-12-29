@@ -111,29 +111,8 @@ public class DxCaptchaFlutterPlugin implements FlutterPlugin, MethodChannel.Meth
         switch (call.method) {
             case METHOD_SHOW:
                 HashMap<String, Object> config = (HashMap<String, Object>) call.arguments;
-                Log.i(TAG, config.toString());
                 delegate.show(config, result);
                 break;
-//            case METHOD_SET_DEBUG_MODE:
-//                boolean debugMode = call.argument("debugMode");
-//                delegate.setDebugMode(debugMode, result);
-//                break;
-//            case METHOD_SET_AUTH:
-//                boolean auth = call.argument("auth");
-//                delegate.setAuth(auth, result);
-//                break;
-//            case METHOD_INIT:
-//                delegate.init(result);
-//                break;
-//            case METHOD_SET_ALIAS:
-//                int sequence = call.argument("sequence");
-//                String alias = call.argument("alias");
-//                delegate.setAlias(sequence, alias, result);
-//                break;
-//            case METHOD_DELETE_ALIAS:
-//                int deleteSequence = call.argument("sequence");
-//                delegate.deleteAlias(deleteSequence, result);
-//                break;
             default:
                 result.notImplemented();
         }
@@ -191,6 +170,7 @@ public class DxCaptchaFlutterPlugin implements FlutterPlugin, MethodChannel.Meth
         public void show(HashMap<String, Object> config, MethodChannel.Result result) {
             if (this.context == null) {
                 Log.e(TAG, "上下文为空");
+                result.error(METHOD_SHOW, "上下文为空", null);
                 return;
             }
             try {
@@ -208,13 +188,13 @@ public class DxCaptchaFlutterPlugin implements FlutterPlugin, MethodChannel.Meth
                                 passByServer = true;
                                 break;
                             case "success":
-//                                mSuccess = true;
                                 mainHandler.postDelayed(() -> {
                                     dxCaptchaDialog.dismiss();
                                     try {
                                         channel.invokeMethod("success", objectMapper.writeValueAsString(map));
                                     } catch (Exception e) {
                                         Log.e(TAG, "parse error: " + "(" + e.getMessage() + ")");
+                                        channel.invokeMethod("error", e.getMessage());
                                     }
                                 }, 100);
                                 break;
@@ -224,6 +204,7 @@ public class DxCaptchaFlutterPlugin implements FlutterPlugin, MethodChannel.Meth
                                         channel.invokeMethod("error", objectMapper.writeValueAsString(map));
                                     } catch (Exception e) {
                                         Log.e(TAG, "parse error: " + "(" + e.getMessage() + ")");
+                                        channel.invokeMethod("error", e.getMessage());
                                     }
                                 }, 100);
                                 break;
@@ -246,7 +227,7 @@ public class DxCaptchaFlutterPlugin implements FlutterPlugin, MethodChannel.Meth
                 result.success(true);
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage(), e);
-                result.error(METHOD_SHOW, e.getMessage(), null);
+                result.error(METHOD_SHOW, e.getMessage(), e.getStackTrace());
             }
 
         }
