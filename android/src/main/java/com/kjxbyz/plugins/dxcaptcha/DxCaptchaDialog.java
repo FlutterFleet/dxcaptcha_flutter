@@ -50,22 +50,7 @@ public class DxCaptchaDialog extends Dialog  {
     }
 
     private void initView() {
-        if (config == null) {
-            Log.e(TAG, "顶象验证码配置为空");
-            return;
-        }
-
-        if (!config.containsKey("appId")) {
-            Log.e(TAG, "顶象验证码配置中缺少appId字段");
-            return;
-        }
-
         String appId = (String) config.get("appId");
-        if (appId == null || appId.isEmpty()) {
-            Log.e(TAG, "顶象验证码配置中appId字段为空");
-            return;
-        }
-
         dxCaptcha.init(appId);
         dxCaptcha.initConfig(config);
         if (config.containsKey("PRIVATE_CLEAR_TOKEN")) {

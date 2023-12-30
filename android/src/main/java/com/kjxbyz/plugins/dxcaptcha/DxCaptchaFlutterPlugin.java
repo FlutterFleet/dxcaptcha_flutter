@@ -14,7 +14,9 @@ import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
 import com.dx.mobile.captcha.DXCaptchaListener;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -168,21 +170,34 @@ public class DxCaptchaFlutterPlugin implements FlutterPlugin, MethodChannel.Meth
          */
         @Override
         public void show(HashMap<String, Object> config, MethodChannel.Result result) {
-            if (this.context == null) {
+            if (ObjectUtils.isEmpty(this.context)) {
                 Log.e(TAG, "上下文为空");
                 result.error(METHOD_SHOW, "上下文为空", null);
                 return;
             }
             try {
+                if (ObjectUtils.isEmpty(config)) {
+                    Log.e(TAG, "顶象验证码配置为空");
+                    result.error(METHOD_SHOW, "顶象验证码配置为空", null);
+                    return;
+                }
+
                 Log.i(TAG, config.toString());
+
+                String appId = (String) config.get("appId");
+                if (StringUtils.isEmpty(appId)) {
+                    Log.e(TAG, "顶象验证码配置中appId字段为空");
+                    result.error(METHOD_SHOW, "顶象验证码配置中appId字段为空", null);
+                    return;
+                }
+
                 Handler mainHandler = new Handler(Looper.getMainLooper());
                 DxCaptchaDialog dxCaptchaDialog = new DxCaptchaDialog(getActivity(), config);
                 dxCaptchaDialog.setListener(new DXCaptchaListener() {
                     boolean passByServer;
                     @Override
                     public void handleEvent(WebView webView, String dxCaptchaEvent, Map map) {
-                        Log.e(TAG, "dxCaptchaEvent:" + dxCaptchaEvent);
-                        ObjectMapper objectMapper = new ObjectMapper();
+                        Log.e(TAG, "dxCaptchaEvent=" + dxCaptchaEvent);
                         switch (dxCaptchaEvent) {
                             case "passByServer":
                                 passByServer = true;
@@ -190,22 +205,12 @@ public class DxCaptchaFlutterPlugin implements FlutterPlugin, MethodChannel.Meth
                             case "success":
                                 mainHandler.postDelayed(() -> {
                                     dxCaptchaDialog.dismiss();
-                                    try {
-                                        channel.invokeMethod("success", objectMapper.writeValueAsString(map));
-                                    } catch (Exception e) {
-                                        Log.e(TAG, "parse error: " + "(" + e.getMessage() + ")");
-                                        channel.invokeMethod("error", e.getMessage());
-                                    }
+                                    channel.invokeMethod("success", map);
                                 }, 100);
                                 break;
                             case "fail":
                                 mainHandler.postDelayed(() -> {
-                                    try {
-                                        channel.invokeMethod("error", objectMapper.writeValueAsString(map));
-                                    } catch (Exception e) {
-                                        Log.e(TAG, "parse error: " + "(" + e.getMessage() + ")");
-                                        channel.invokeMethod("error", e.getMessage());
-                                    }
+                                    channel.invokeMethod("error", map);
                                 }, 100);
                                 break;
                             case "onCaptchaJsLoaded":

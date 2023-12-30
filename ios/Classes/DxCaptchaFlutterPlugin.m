@@ -9,6 +9,8 @@
 #import <DingxiangCaptchaSDKStatic/DXCaptchaView.h>
 #import <DingxiangCaptchaSDKStatic/DXCaptchaDelegate.h>
 
+NSString * const FlutterMethodCallBadRequest = @"FlutterMethodCallBadRequest";
+
 @interface DxCaptchaFlutterPlugin () <DXCaptchaDelegate, UIGestureRecognizerDelegate>
 
 @property(strong, readonly) FlutterMethodChannel *channel;
@@ -42,11 +44,13 @@
     id arguments = call.arguments;
     if (arguments == nil) {
       NSLog(@"顶象验证码配置为空");
+      result([FlutterError errorWithCode:FlutterMethodCallBadRequest message:@"顶象验证码配置为空" details:nil]);
       return;
     }
 
     if (![arguments isKindOfClass: NSMutableDictionary.class]) {
       NSLog(@"顶象验证码配置必须为字典类型");
+      result([FlutterError errorWithCode:FlutterMethodCallBadRequest message:@"顶象验证码配置必须为字典类型" details:nil]);
       return;
     }
 
@@ -55,6 +59,7 @@
     id language = [config objectForKey:@"language"];
     if (appId == nil || [@"" isEqualToString:appId]) {
       NSLog(@"顶象验证码配置中appId字段为空");
+      result([FlutterError errorWithCode:FlutterMethodCallBadRequest message:@"顶象验证码配置中appId字段为空" details:nil]);
       return;
     }
 
@@ -122,15 +127,7 @@
       [self.overlayView removeFromSuperview];
       NSString *token = dict[@"token"];
       NSLog(@"token: %@", token);
-      NSData *data;
-      if (@available(iOS 13.0, *)) {
-        data = [NSJSONSerialization dataWithJSONObject:dict options: NSJSONWritingWithoutEscapingSlashes error:nil];
-      } else {
-        // Fallback on earlier versions
-        data = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:nil];
-      }
-      NSString* response = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-      [self.channel invokeMethod: @"success" arguments: response];
+      [self.channel invokeMethod: @"success" arguments: dict];
       break;
     }
     case DXCaptchaEventFail:
@@ -138,15 +135,7 @@
       NSLog(@"dxcaptcha failure");
       [self.captchaView removeFromSuperview];
       [self.overlayView removeFromSuperview];
-      NSData *data;
-      if (@available(iOS 13.0, *)) {
-        data = [NSJSONSerialization dataWithJSONObject:dict options: NSJSONWritingWithoutEscapingSlashes error:nil];
-      } else {
-        // Fallback on earlier versions
-        data = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:nil];
-      }
-      NSString* response = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-      [self.channel invokeMethod: @"error" arguments: response];
+      [self.channel invokeMethod: @"error" arguments: dict];
       break;
     }
     default:
