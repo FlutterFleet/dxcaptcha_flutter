@@ -28,9 +28,8 @@ class _MyAppState extends State<MyApp> {
           child: TextButton(
             onPressed: () async {
               DxCaptchaFlutter.setMethodCallHandler((MethodCall call) async {
-                if (call.method == 'success') {
-                  final res = jsonDecode(call.arguments as String)
-                      as Map<String, dynamic>;
+                if (call.method == 'success' && call.arguments != null) {
+                  final res = call.arguments as Map<dynamic, dynamic>;
                   final dxToken = res['token'] as String?;
                 } else if (call.method == 'error') {}
               });
