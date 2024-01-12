@@ -9,7 +9,7 @@
 #import <DingxiangCaptchaSDKStatic/DXCaptchaView.h>
 #import <DingxiangCaptchaSDKStatic/DXCaptchaDelegate.h>
 
-NSString * const FlutterMethodCallBadRequest = @"FlutterMethodCallBadRequest";
+NSString * const DxFlutterMethodCallBadRequest = @"DxFlutterMethodCallBadRequest";
 
 @interface DxCaptchaFlutterPlugin () <DXCaptchaDelegate, UIGestureRecognizerDelegate>
 
@@ -44,13 +44,13 @@ NSString * const FlutterMethodCallBadRequest = @"FlutterMethodCallBadRequest";
     id arguments = call.arguments;
     if (arguments == nil) {
       NSLog(@"顶象验证码配置为空");
-      result([FlutterError errorWithCode:FlutterMethodCallBadRequest message:@"顶象验证码配置为空" details:nil]);
+      result([FlutterError errorWithCode:DxFlutterMethodCallBadRequest message:@"顶象验证码配置为空" details:nil]);
       return;
     }
 
     if (![arguments isKindOfClass: NSMutableDictionary.class]) {
       NSLog(@"顶象验证码配置必须为字典类型");
-      result([FlutterError errorWithCode:FlutterMethodCallBadRequest message:@"顶象验证码配置必须为字典类型" details:nil]);
+      result([FlutterError errorWithCode:DxFlutterMethodCallBadRequest message:@"顶象验证码配置必须为字典类型" details:nil]);
       return;
     }
 
@@ -59,7 +59,7 @@ NSString * const FlutterMethodCallBadRequest = @"FlutterMethodCallBadRequest";
     id language = [config objectForKey:@"language"];
     if (appId == nil || [@"" isEqualToString:appId]) {
       NSLog(@"顶象验证码配置中appId字段为空");
-      result([FlutterError errorWithCode:FlutterMethodCallBadRequest message:@"顶象验证码配置中appId字段为空" details:nil]);
+      result([FlutterError errorWithCode:DxFlutterMethodCallBadRequest message:@"顶象验证码配置中appId字段为空" details:nil]);
       return;
     }
 
