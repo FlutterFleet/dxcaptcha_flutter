@@ -1,16 +1,23 @@
 # dxcaptcha_flutter_example
 
-Demonstrates how to use the dxcaptcha_flutter plugin.
+![Pub Version](https://img.shields.io/pub/v/dxcaptcha_flutter)
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+```dart
+DxCaptchaFlutter.setMethodCallHandler((MethodCall call) async {
+  if (call.method == 'success' && call.arguments != null) {
+    final res = call.arguments as Map<dynamic, dynamic>;
+    final dxToken = res['token'] as String?;
+  } else if (call.method == 'error') {
+    
+  }
+});
+```
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```dart
+await DxCaptchaFlutter.show({
+  'appId': '26ba29b6a3744dbebee8e46fbe3f311a',
+  'language': 'en',
+});
+```

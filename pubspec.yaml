@@ -1,7 +1,8 @@
 name: dxcaptcha_flutter
 description: "DxCaptcha for Flutter"
 version: 0.0.1
-homepage:
+homepage: https://www.kjxbyz.com/flutterfleet
+repository: https://github.com/FlutterFleet/dxcaptcha_flutter
 
 environment:
   sdk: '>=3.2.3 <4.0.0'
